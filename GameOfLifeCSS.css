@@ -1,0 +1,107 @@
+
+body { margin: 0; }
+
+html, body, canvas {
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+}
+
+/* label.quart { white-space: nowrap; } */
+
+canvas, #Couleur { border: none; }
+
+input {
+	border: 1px dotted black;
+	background-color: transparent;
+}
+
+button, input, summary { outline: 0; }
+
+button, summary, input[type="color"] {
+	cursor: pointer;
+	padding: 0;
+}
+
+button, span, label, input {
+	box-sizing: border-box;
+	font-size: 18px;
+	display: block;
+	margin: 4px 0;
+	width: 100%;
+}
+
+button, span, label, input, h1, h4, summary {
+	font-family: "Arial";
+	text-align: center;
+}
+
+.boutonApparence {
+	background-color: #0078d7;
+	border: 2px solid black;
+	text-align: center;
+	margin: 4px 0;
+	color: #fff;
+}
+
+#Options {
+	border: 3px solid black;
+	background-color: white;
+	will-change: left, top;
+	position: absolute;
+	width: 324px;
+	margin: 3px;
+}
+
+.optionsFenêtre {
+	border-bottom: 1px solid black;
+	box-sizing: border-box;
+	padding: 4px;
+}
+
+h1, h4 { margin: 8px; }
+
+.moitié, .tiers, .quart {
+	display: inline-block;
+	line-height: 100%;
+	padding: 2px 0;
+	margin: 2px 0;
+}
+
+.moitié { width: calc(50% - 3px); }
+
+.tiers { width: calc(33% - 3px); }
+
+.quart { width: calc(25% - 4px); }
+
+label.tiers { font-size: 16px; }
+
+#Déplacement { cursor: move; }
+
+#Déplacement, button {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+.listeInputs {
+	display: flex;
+	padding-right: 6px;
+}
+
+.listeInputs input {
+	flex-grow: 1;
+}
+
+.inputRègle {
+	display: inline-block;
+	width: auto;
+}
+
+#Point {
+	background-color: black;
+	border-radius: 50%;
+	margin: 50% auto;
+	height: 3px;
+	width: 3px;
+}
