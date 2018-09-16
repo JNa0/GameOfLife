@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			Jeu de la Vie
+		</title>
+		<link rel="stylesheet" type="text/css" href="GameOfLifeCSS.css">
+	</head>
+	<body>
+		<canvas id="canevas"></canvas><!-- 
+		<span class="centré"></span> -->
+		<section id="Options">
+			<div class="optionsFenêtre">
+				<!-- Boutons & informations -->
+				<button class="boutonApparence tiers" id="lecturePause">Jouer<!--⯈--></button>
+				<button class="boutonApparence tiers" id="étape">Step</button>
+				<span class="boutonApparence tiers" id="Déplacement">Déplacer<!--🕂--></span>
+				<span class="moitié" id="indicateurGénérations">Gen. 0</span>
+				<span class="moitié" id="indicateurPopulation">Pop. 0</span>
+
+				<!-- Générations/s -->
+				<label class="moitié" for="générationsParSeconde">Générations/s :</label>
+				<input class="moitié" type="number" id="générationsParSeconde" min="1" max="50">
+
+				<!-- Grossissement & focus -->
+				<button class="boutonApparence tiers" id="déGrossissement">Grossissement -<!--🔎---></button>
+				<button class="boutonApparence tiers" id="Grossissement">Grossissement +<!--🔎+--></button>
+				<button class="boutonApparence tiers" id="Focus">Focus</button>
+			</div>
+
+			<details class="optionsFenêtre">
+				<summary class="boutonApparence">
+					Plus de paramètres
+				</summary>
+				<div id="Paramètres">
+
+					<!-- Règles -->
+					<div id="règles">
+						<h4>Une cellule naît si :</h4>
+						<div class="listeInputs" id="naissanceSi">
+							<input class="inputRègle naîtSi" type="checkbox" valeurNumérique="1">1
+							<input class="inputRègle naîtSi" type="checkbox" valeurNumérique="2">2
+							<input class="inputRègle naîtSi" type="checkbox" valeurNumérique="3">3
+							<input class="inputRègle naîtSi" type="checkbox" valeurNumérique="4">4
+							<input class="inputRègle naîtSi" type="checkbox" valeurNumérique="5">5
+							<input class="inputRègle naîtSi" type="checkbox" valeurNumérique="6">6
+							<input class="inputRègle naîtSi" type="checkbox" valeurNumérique="7">7
+							<input class="inputRègle naîtSi" type="checkbox" valeurNumérique="8">8
+						</div>
+						<h4>Une cellule meurt si :</h4>
+						<div class="listeInputs" id="mortSi">
+							<input class="inputRègle meurtSi" type="checkbox" valeurNumérique="0">0
+							<input class="inputRègle meurtSi" type="checkbox" valeurNumérique="1">1
+							<input class="inputRègle meurtSi" type="checkbox" valeurNumérique="2">2
+							<input class="inputRègle meurtSi" type="checkbox" valeurNumérique="3">3
+							<input class="inputRègle meurtSi" type="checkbox" valeurNumérique="4">4
+							<input class="inputRègle meurtSi" type="checkbox" valeurNumérique="5">5
+							<input class="inputRègle meurtSi" type="checkbox" valeurNumérique="6">6
+							<input class="inputRègle meurtSi" type="checkbox" valeurNumérique="7">7
+							<input class="inputRègle meurtSi" type="checkbox" valeurNumérique="8">8
+						</div>
+						<h4>
+							La case reste dans son état actuel dans tout les autres cas.
+						</h4>
+					</div>
+
+					<!-- Dimensions -->
+					<div>
+						<label class="quart" for="Largeur">Largeur :</label>
+						<input class="quart" type="number" id="Largeur"  placeholder="Largeur">
+						<label class="quart" for="Hauteur">Hauteur :</label>
+						<input class="quart" type="number" id="Hauteur" placeholder="Hauteur">
+						<button class="boutonApparence" id="Redimensionner">Redimensionner</button>
+
+						<!-- Couleurs -->
+						<label class="tiers" for="celluleCouleur">Couleur de cellule :</label>
+						<label class="tiers" for="bordureCouleur">Couleur de bordure :</label>
+						<label class="tiers" for="fondCouleur">Couleur de fond :</label>
+						<input class="tiers" type="color" id="couleurCellule">
+						<input class="tiers" type="color" id="couleurBordure">
+						<input class="tiers" type="color" id="couleurFond">
+					</div>
+
+					<!-- Sauvegarde, aléatoire et réinitialisation -->
+					<div>
+						<button class="boutonApparence moitié" id="Sauvegarder">Sauvegarder</button>
+						<button class="boutonApparence moitié" actif="true" id="sauvegardeAutomatique">Désactiver sauvegarde automatique</button>
+						<button class="boutonApparence moitié" id="Aléatoire">Aléatoire</button>
+						<button class="boutonApparence moitié" id="Réinitialiser">Réinitialiser</button>
+					</div>
+				</div>
+			</details>
+		</section>
+		<script src="InitialisationJS.js"></script>
+		<script src="Fonctions principales.js"></script>
+		<script src="Paramètres optionnels.js"></script>
+		<script src="DéplaceurPlanJS.js"></script>
+		<script src="DéplaceurFenêtreOptionsJS.js"></script>
+	</body>
+</html>
