@@ -12,7 +12,7 @@ html, body, canvas {
 canvas, #Couleur { border: none; }
 
 input {
-	border: 1px dotted black;
+	border: none;
 	background-color: transparent;
 }
 
