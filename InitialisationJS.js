@@ -1,53 +1,74 @@
 
-document.addEventListener("DOMContentLoaded", function () {
+/*
 
+À faire :
+
+	- performances++ => quadtree ?
+		- /r aux sauvegardes :
+			- alléger la sauvegarde
+				- enregistrer les cases occupées => permettra de faire des mondes infinis
+				- puis au chargement faire jonction entre objet chargé et objet param par défaut
+			- meilleure sauvegarde
+				- grands plans déformés => comment faire ?
+				- sauvegarder séparément les données et conserver typage ?
+
+	- multiplicité des systèmes de règles possibles ? L'automate de ...
+	- gestion de fichiers : sauvegarde et chargement
+	- meilleure gestion des touches :
+		- maintenir clic gauche : multiple activation / dés--
+		- raccourcis claviers ?
+
+	- modes :
+		- infini
+		- autres formes
+		- 3D
+
+*/
+
+document.addEventListener("DOMContentLoaded", function () {
 	// HTMLÉléments
 	canevas = document.getElementById("canevas")
-	fenêtre = document.getElementById("Options")
+	fenêtre = document.getElementById("options")
 	plusParamètres = document.querySelector("details")
-	couleurFond = document.getElementById("couleurFond")
-	HTMLLargeurInput = document.getElementById("Largeur")
-	HTMLHauteurInput = document.getElementById("Hauteur")
-	HTMLlecturePause = document.getElementById("lecturePause")
-	couleurCellule = document.getElementById("couleurCellule")
-	couleurBordure = document.getElementById("couleurBordure")
 	indicateurPopulation = document.getElementById("indicateurPopulation")
 	indicateurGénérations = document.getElementById("indicateurGénérations")
-	générationsParSeconde = document.getElementById("générationsParSeconde")
-	sauvegardeAutomatique = document.getElementById("sauvegardeAutomatique")
+
+	boutonLecturePause = document.getElementById("lecturePause")
+	boutonSauvegardeAutomatique = document.getElementById("sauvegardeAutomatique")
+
+	entréeLargeur = document.getElementById("largeur")
+	entréeHauteur = document.getElementById("hauteur")
+	entréeGénérationsParSeconde = document.getElementById("générationsParSeconde")
+
+	entréeCouleurFond = document.getElementById("couleurFond")
+	entréeCouleurCellule = document.getElementById("couleurCellule")
+	entréeCouleurBordure = document.getElementById("couleurBordure")
 
 	naîtSi = Array.from(document.getElementsByClassName("naîtSi"))
 	meurtSi = Array.from(document.getElementsByClassName("meurtSi"))
-	
-	couleurFond.addEventListener("change", function () { Couleur(this.value, 2) })
-	couleurCellule.addEventListener("change", function () { Couleur(this.value, 0) })
-	couleurBordure.addEventListener("change", function () { Couleur(this.value, 1) })
 
-	document.getElementById("Focus").addEventListener("click", () => Focus() )
-	document.getElementById("Aléatoire").addEventListener("click", () => Aléatoire() )
-	document.getElementById("étape").addEventListener("click", () => (!enCours && Étape()) )
-	document.getElementById("Sauvegarder").addEventListener("click", () => Sauvegarder(true) )
-	document.getElementById("Réinitialiser").addEventListener("click", () => Réinitialiser() )
-	document.getElementById("Redimensionner").addEventListener("click", () => Redimensionner() )
-	document.getElementById("Grossissement").addEventListener("click", () => Grossissement(true) )
-	document.getElementById("déGrossissement").addEventListener("click", () => Grossissement(false) )
-	document.getElementById("sauvegardeAutomatique").addEventListener("click", function () { ActiverSauvegardeAutomatique(this) } )
+	couleurFond.addEventListener("change", function () { couleur(this.value, 2) })
+	couleurCellule.addEventListener("change", function () { couleur(this.value, 0) })
+	couleurBordure.addEventListener("change", function () { couleur(this.value, 1) })
 
-	générationsParSeconde.addEventListener("change", function () { Fréquence(this) })
-	HTMLlecturePause.addEventListener("click", function () { lecturePause() });
+	document.getElementById("aléatoire").addEventListener("click", aléatoire)
+	document.getElementById("étape").addEventListener("click", () => (!enCours && étape()) )
+	document.getElementById("sauvegarder").addEventListener("click", () => sauvegarder(true) )
+	document.getElementById("réinitialiser").addEventListener("click", réinitialiser)
+	document.getElementById("redimensionner").addEventListener("click", redimensionner)
+	document.getElementById("sauvegardeAutomatique").addEventListener("click", activerSauvegardeAutomatique)
+
+	générationsParSeconde.addEventListener("change", changerFréquence)
+	boutonLecturePause.addEventListener("click", lecturePause);
 
 	// Ajoute un écouteur de changement sur chaque input de changement de règle
-	[...naîtSi, ...meurtSi].forEach(function (HTMLInput) {
-		HTMLInput.addEventListener("change", function () {
-			// Pour sauvegarder et mettre en effet ce changement
-			changerRègles()
-		})
-	})
+	// Pour sauvegarder et mettre en effet ce changement
+	[...naîtSi, ...meurtSi].forEach((boutonEntrée) => boutonEntrée.addEventListener("change", changerRègles))
 
 	// Variables initiales : contexte du canevas et deux variables d'état
 	plan2Dimension = canevas.getContext("2d")
 	enCours = false // Le jeu est en pause
-	enDéplacement = false	// L'utilisateur ne déplace pas le plan
+	enDéplacement = false // L'utilisateur ne déplace pas le plan
 
 	// Dimensionne le canevas pour prendre toute la page
 	canevas.width = innerWidth
@@ -65,12 +86,11 @@ document.addEventListener("DOMContentLoaded", function () {
 			// On convertit de la base 36 au binaire la valeur enregistrée
 			let séquenceBinaire = (parseInt(objetParamètres.plan[i], 36)).toString(2)
 			// Si le nombre binaire est trop court
-			if (séquenceBinaire.length < objetParamètres.hauteur) {
+			if (séquenceBinaire.length < objetParamètres.hauteur)
 				// On ajoute autant de 0 que nécessaire
-				for (let i = séquenceBinaire.length; i < objetParamètres.hauteur; i++) {
+				for (let i = séquenceBinaire.length; i < objetParamètres.hauteur; i++)
 					séquenceBinaire = "0" + séquenceBinaire
-				}
-			}
+
 			// On crée un tableau des bits ainsi récupérés
 			objetParamètres.plan[i] = séquenceBinaire.split("")
 			objetParamètres.plan[i] = objetParamètres.plan[i].map((x) => x - 0)
@@ -79,9 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Ajoute des colonnes s'il en manque
 		for (let i = objetParamètres.plan.length; i < objetParamètres.largeur; i++) {
 			objetParamètres.plan.push([])
-			for (let j = 0; j < objetParamètres.hauteur; j++) {
+			for (let j = 0; j < objetParamètres.hauteur; j++)
 				objetParamètres.plan[i].push(0)
-			}
 		}
 	}
 	else {
@@ -110,9 +129,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Création de la plan
 		for (let i = 0; i < objetParamètres.largeur; i++) {
 			objetParamètres.plan.push([])
-			for (let j = 0; j < objetParamètres.hauteur; j++) {
+			for (let j = 0; j < objetParamètres.hauteur; j++)
 				objetParamètres.plan[i].push(0)
-			}
 		}
 	}
 
@@ -131,15 +149,15 @@ document.addEventListener("DOMContentLoaded", function () {
 	indicateurGénérations.innerText = "Gen. " + objetParamètres.générations
 	fenêtre.style.left = objetParamètres.position[0] + "px"
 	fenêtre.style.top = objetParamètres.position[1] + "px"
-	générationsParSeconde.value = objetParamètres.générationsParSeconde
-	HTMLLargeurInput.value = objetParamètres.largeur
-	HTMLHauteurInput.value = objetParamètres.hauteur
-	couleurCellule.value = objetParamètres.couleurs[0]
-	couleurBordure.value = objetParamètres.couleurs[1]
-	couleurFond.value = objetParamètres.couleurs[2]
+	entréeGénérationsParSeconde.value = objetParamètres.générationsParSeconde
+	entréeLargeur.value = objetParamètres.largeur
+	entréeHauteur.value = objetParamètres.hauteur
+	entréeCouleurCellule.value = objetParamètres.couleurs[0]
+	entréeCouleurBordure.value = objetParamètres.couleurs[1]
+	entréeCouleurFond.value = objetParamètres.couleurs[2]
 	objetParamètres.fenêtreFlottanteDéroulée && plusParamètres.setAttribute("open", "")
-	sauvegardeAutomatique.innerText = objetParamètres.sauvegardeAutomatique ? "Désactiver sauvegarde automatique" : "Activer sauvegarde automatique"
-	sauvegardeAutomatique.setAttribute("actif", objetParamètres.sauvegardeAutomatique ? "true" : "false")
+	boutonSauvegardeAutomatique.innerText = objetParamètres.sauvegardeAutomatique ? "Désactiver sauvegarde automatique" : "Activer sauvegarde automatique"
+	boutonSauvegardeAutomatique.setAttribute("actif", objetParamètres.sauvegardeAutomatique ? "true" : "false")
 	// Replace la fenêtre d'options si elle sort du document
 	replacerFenêtreOptions(objetParamètres.position[0], objetParamètres.position[1], fenêtre.getBoundingClientRect(), document.body.getBoundingClientRect())
 	naîtSi.forEach(function (input, i) {
@@ -165,16 +183,16 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Replace la fenêtre d'options si elle sort du cadre
 		replacerFenêtreOptions(objetParamètres.position[0], objetParamètres.position[1], fenêtre.getBoundingClientRect(), document.body.getBoundingClientRect())
 
-		Sauvegarder()
+		sauvegarder()
 		dessinerJeu()
 	})
 
-	// Changer l'état d'une cellule en cliquant sur le canevas
-	canevas.addEventListener("click", function (evt) {
-		if (evt.which === 1) {
+	// Changer l’état d'une cellule en cliquant sur le canevas
+	canevas.addEventListener("click", function (événement) {
+		if (événement.which === 1) {
 			// Calcul de i et j coordonnées du point
-			let i = Math.floor((evt.clientX + objetParamètres.décalage[0]) / (tailleCellule * objetParamètres.grossissement)),
-				j = Math.floor((evt.clientY + objetParamètres.décalage[1]) / (tailleCellule * objetParamètres.grossissement))
+			let i = Math.floor((événement.clientX + objetParamètres.décalage[0]) / (tailleCellule * objetParamètres.grossissement)),
+				j = Math.floor((événement.clientY + objetParamètres.décalage[1]) / (tailleCellule * objetParamètres.grossissement))
 			// On utilise une bloc try pour gérer l'erreur potentielle si
 			// plan[i] n'existe pas (négatif ou supérieur à objetParamètres.width)
 			try {
@@ -188,21 +206,35 @@ document.addEventListener("DOMContentLoaded", function () {
 					// On efface l'espace de la cellule et on la redessine
 					plan2Dimension.clearRect(tailleCellule * objetParamètres.grossissement * i - objetParamètres.décalage[0], tailleCellule * objetParamètres.grossissement * j - objetParamètres.décalage[1], tailleCellule * objetParamètres.grossissement, tailleCellule * objetParamètres.grossissement)
 					dessinerCellule(tailleCellule * objetParamètres.grossissement * i - objetParamètres.décalage[0], tailleCellule * objetParamètres.grossissement * j - objetParamètres.décalage[1], tailleCellule * objetParamètres.grossissement, objetParamètres.plan[i][j])
-					Sauvegarder()
+					sauvegarder()
 				}
-			// Si une erreur est capturée : i est hors de [0;objetParamètres.width] ; dans ce cas on ne fait rien
+			// Si une erreur est capturée : i est hors de [0 ; objetParamètres.width] ; dans ce cas on ne fait rien
 			} catch (e) {}
 		}
 	})
 
-	fenêtre.querySelector("summary").addEventListener("click", function (evt) {
+	// Nécessairement window, aucune idée de pour quoi
+	window.addEventListener("click", function (événement) {
+		if (événement.which === 2)
+			centrer()
+	})
+
+	document.documentElement.addEventListener("wheel", function (événement) {
+		if (événement.deltaY < 0)
+			grossissement(true)
+
+		else if (événement.deltaY > 0)
+			grossissement(false)
+	})
+
+	fenêtre.querySelector("summary").addEventListener("click", function (événement) {
 		// Met un timeout pour laisser au document le temps de mettre l'attribut open
 		// Et changer la taille de la fenêtre (sinon on obtient la taille avant clic)
 		let _this_ = this
 		setTimeout (function () {
 			objetParamètres.fenêtreFlottanteDéroulée = _this_.parentElement.hasAttribute("open")
 			replacerFenêtreOptions(objetParamètres.position[0], objetParamètres.position[1], fenêtre.getBoundingClientRect(), document.body.getBoundingClientRect())
-			Sauvegarder()
+			sauvegarder()
 		}, 1)
 	})
 })

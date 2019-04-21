@@ -9,7 +9,7 @@ html, body, canvas {
 
 /* label.quart { white-space: nowrap; } */
 
-canvas, #Couleur { border: none; }
+canvas, #couleur { border: none; }
 
 input {
 	border: none;
@@ -44,7 +44,7 @@ button, span, label, input, h1, h4, summary {
 	color: #fff;
 }
 
-#Options {
+#options {
 	border: 3px solid black;
 	background-color: white;
 	will-change: left, top;
@@ -76,9 +76,9 @@ h1, h4 { margin: 8px; }
 
 label.tiers { font-size: 16px; }
 
-#Déplacement { cursor: move; }
+#déplacement { cursor: move; }
 
-#Déplacement, button {
+#déplacement, button {
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	user-select: none;
@@ -98,7 +98,7 @@ label.tiers { font-size: 16px; }
 	width: auto;
 }
 
-#Point {
+#point {
 	background-color: black;
 	border-radius: 50%;
 	margin: 50% auto;

@@ -1,23 +1,23 @@
 
-étatInput = function (input) { return input.checked }
+étatEntrée = function (entrée) { return entrée.checked }
 
-valeurInput = function (input) { return input.getAttribute("valeurNumérique") - 0 }
+valeurEntrée = function (entrée) { return entrée.getAttribute("valeurNumérique") - 0 }
 
-// Retourne l'ensemble des nombres dont l'input est active
-obtenirValeursInputs = function (tableauHTMLInput) { return tableauHTMLInput.filter(étatInput).map(valeurInput) }
+// Retourne l’ensemble des nombres dont l’entrée est active
+obtenirValeursEntrées = function (tableauHTMLEntrées) { return tableauHTMLEntrées.filter(étatEntrée).map(valeurEntrée) }
 
 changerRègles = function () {
 	// Met à jour les tableaux de règles
-	objetParamètres.règles.naîtSi = obtenirValeursInputs(naîtSi)
-	objetParamètres.règles.meurtSi = obtenirValeursInputs(meurtSi)
-	Sauvegarder()
+	objetParamètres.règles.naîtSi = obtenirValeursEntrées(naîtSi)
+	objetParamètres.règles.meurtSi = obtenirValeursEntrées(meurtSi)
+	sauvegarder()
 }
 
-Redimensionner = function () {
+redimensionner = function () {
 	// Met le jeu en pause
 	enCours && lecturePause()
-	let largeur = HTMLLargeurInput.value - 0,
-		hauteur = HTMLHauteurInput.value - 0
+	let largeur = entréeLargeur.value - 0,
+		hauteur = entréeHauteur.value - 0
 	// Si les contenus des inputs sont supérieurs à 0
 	if (largeur > 0 && hauteur > 0) {
 		// Change les valeurs et réinitialise le plan
@@ -37,50 +37,49 @@ Redimensionner = function () {
 		indicateurPopulation.innerText = "Pop. 0"
 		calculerTailleCellule()
 		dessinerJeu()
-		Sauvegarder()
+		sauvegarder()
 	}
 }
 
-Couleur = function (couleur, index) {
-	// Change la valeur couleur dans l'objet et dans le contexte bi-dimensionnel du canevas
+couleur = function (couleur, index) {
+	// Change la valeur couleur dans l’objet et dans le contexte bi-dimensionnel du canevas
 	objetParamètres.couleurs[index] = couleur
 	switch (index) {
-		case 0 :
+		case 0:
 			plan2Dimension.fillStyle = couleur
 		break
-		case 1 :
+		case 1:
 			plan2Dimension.strokeStyle = couleur
 		break
-		case 2 :
+		case 2:
 			canevas.style.backgroundColor = couleur
 		break
 	}
 	dessinerJeu()
-	Sauvegarder()
+	sauvegarder()
 }
 
-ActiverSauvegardeAutomatique = function (HTMLÉlément) {
-	// Trouve l'état enregistré dans un attribut sur le bouton
-	let état = HTMLÉlément.getAttribute("actif") == "true"
+activerSauvegardeAutomatique = function () {
+	// Trouve l’état enregistré dans un attribut sur le bouton
+	let état = boutonSauvegardeAutomatique.getAttribute("actif") == "true"
 	// Change son contenu textuel en conséquence puis inverse son état
-	HTMLÉlément.innerText = état ? "Activer sauvegarde automatique" : "Désactiver sauvegarde automatique"
-	HTMLÉlément.setAttribute("actif", état ? "false" : "true")
+	boutonSauvegardeAutomatique.innerText = état ? "Activer sauvegarde automatique" : "Désactiver sauvegarde automatique"
+	boutonSauvegardeAutomatique.setAttribute("actif", état ? "false" : "true")
 	objetParamètres.sauvegardeAutomatique = !état
 	// Force la sauvegarde
-	Sauvegarder(true)
+	sauvegarder(true)
 }
 
-Aléatoire = function () {
+aléatoire = function () {
 	// Si le jeu est en cours, met le jeu en pause
 	enCours && lecturePause()
 	// Pour chaque colonne
-	for (let i = 0; i < objetParamètres.largeur; i++) {
+	for (let i = 0; i < objetParamètres.largeur; i++)
 		// Pour chaque ligne
-		for (let j = 0; j < objetParamètres.hauteur; j++) {
+		for (let j = 0; j < objetParamètres.hauteur; j++)
 			// Attribue une valeur aléatoire à chaque cellule
 			objetParamètres.plan[i][j] = Math.round(Math.random()) ? 1 : 0
-		}
-	}
+
 	dessinerJeu()
 	// Réinitialise le nombre de générations et recalcule le nombre de cellules vivantes
 	objetParamètres.générations = 0
@@ -88,7 +87,7 @@ Aléatoire = function () {
 	cellulesVivantes()
 }
 
-Réinitialiser = function () {
+réinitialiser = function () {
 	// Interrompt le jeu et supprime la sauvegarde puis recharge la page
 	enCours = false
 	localStorage.removeItem("JeuDeLaVie")

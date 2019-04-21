@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 			enDéplacement = false
 			delete positionSouris
-			Sauvegarder()
+			sauvegarder()
 		}
 	})
 })

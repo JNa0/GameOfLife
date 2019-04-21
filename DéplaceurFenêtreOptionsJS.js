@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	// On ajoute un écouteur de clic (pression uniquement) sur l'élément de déplacement
-	document.getElementById("Déplacement").addEventListener("mousedown", function (événement) {
+	document.getElementById("déplacement").addEventListener("mousedown", function (événement) {
 		// Si c'est un clic gauche
 		if (événement.which == 1) {
 			// On crée l'objet qui contient la position de la souris au commencement du déplacement
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			objetParamètres.position = [àProposFenêtreOptions.left - 3, àProposFenêtreOptions.top - 3]
 			// On supprime l'objet débutDéplacement puis on sauvegarde (pour la nouvelle position)
 			delete débutDéplacement
-			Sauvegarder()
+			sauvegarder()
 		}
 	})
 })
